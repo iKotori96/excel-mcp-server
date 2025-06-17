@@ -205,32 +205,43 @@ def read_data_from_excel(
 ) -> str:
     """
     Read data from Excel worksheet with cell metadata including validation rules.
-    
+
     Args:
         filepath: Path to Excel file
         sheet_name: Name of worksheet
         start_cell: Starting cell (default A1)
         end_cell: Ending cell (optional, auto-expands if not provided)
         preview_only: Whether to return preview only
-    
-    Returns:  
+
+    Returns:
     JSON string containing structured cell data with validation metadata.
     Each cell includes: address, value, row, column, and validation info (if any).
     """
     try:
         full_path = get_excel_path(filepath)
         from excel_mcp.data import read_excel_range_with_metadata
+
         result = read_excel_range_with_metadata(
-            full_path, 
-            sheet_name, 
-            start_cell, 
-            end_cell
+            full_path, sheet_name, start_cell, end_cell
         )
         if not result or not result.get("cells"):
             return "No data found in specified range"
 
+        if preview_only:
+            from collections import defaultdict
+
+            cells = result["cells"]
+            results: dict[int, list[str | None]] = defaultdict(list)
+            for cell_data in cells:
+                row: int = cell_data["row"]
+                value = cell_data["value"]
+                results[row].append(str(value) if value else None)
+            result_list = [str(row) if row else "" for row in results.values()]
+            return "\n".join(result_list)
+
         # Return as formatted JSON string
         import json
+
         return json.dumps(result, indent=2, default=str)
 
     except Exception as e:
