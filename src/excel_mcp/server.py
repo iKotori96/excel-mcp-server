@@ -140,32 +140,33 @@ def validate_formula_syntax(
         logger.error(f"Error validating formula: {e}")
         raise
 
+
 @mcp.tool()
 def format_range(
     filepath: str,
     sheet_name: str,
     start_cell: str,
-    end_cell: str = None,
+    end_cell: str | None = None,
     bold: bool = False,
     italic: bool = False,
     underline: bool = False,
-    font_size: int = None,
-    font_color: str = None,
-    bg_color: str = None,
-    border_style: str = None,
-    border_color: str = None,
-    number_format: str = None,
-    alignment: str = None,
+    font_size: int | None = None,
+    font_color: str | None = None,
+    bg_color: str | None = None,
+    border_style: str | None = None,
+    border_color: str | None = None,
+    number_format: str | None = None,
+    alignment: str | None = None,
     wrap_text: bool = False,
     merge_cells: bool = False,
-    protection: Dict[str, Any] = None,
-    conditional_format: Dict[str, Any] = None
+    protection: Dict[str, Any] | None = None,
+    conditional_format: Dict[str, Any] | None = None,
 ) -> str:
     """Apply formatting to a range of cells."""
     try:
         full_path = get_excel_path(filepath)
         from excel_mcp.formatting import format_range as format_range_func
-        
+
         format_range_func(
             filepath=full_path,
             sheet_name=sheet_name,
@@ -193,13 +194,14 @@ def format_range(
         logger.error(f"Error formatting range: {e}")
         raise
 
+
 @mcp.tool()
 def read_data_from_excel(
     filepath: str,
     sheet_name: str,
     start_cell: str = "A1",
-    end_cell: str = None,
-    preview_only: bool = False
+    end_cell: str | None = None,
+    preview_only: bool = False,
 ) -> str:
     """
     Read data from Excel worksheet with cell metadata including validation rules.
@@ -226,14 +228,15 @@ def read_data_from_excel(
         )
         if not result or not result.get("cells"):
             return "No data found in specified range"
-            
+
         # Return as formatted JSON string
         import json
         return json.dumps(result, indent=2, default=str)
-        
+
     except Exception as e:
         logger.error(f"Error reading data: {e}")
         raise
+
 
 @mcp.tool()
 def write_data_to_excel(
@@ -322,6 +325,7 @@ def create_chart(
         logger.error(f"Error creating chart: {e}")
         raise
 
+
 @mcp.tool()
 def create_pivot_table(
     filepath: str,
@@ -329,8 +333,8 @@ def create_pivot_table(
     data_range: str,
     rows: List[str],
     values: List[str],
-    columns: List[str] = None,
-    agg_func: str = "mean"
+    columns: List[str] | None = None,
+    agg_func: str = "mean",
 ) -> str:
     """Create pivot table in worksheet."""
     try:
@@ -351,13 +355,14 @@ def create_pivot_table(
         logger.error(f"Error creating pivot table: {e}")
         raise
 
+
 @mcp.tool()
 def create_table(
     filepath: str,
     sheet_name: str,
     data_range: str,
-    table_name: str = None,
-    table_style: str = "TableStyleMedium9"
+    table_name: str | None = None,
+    table_style: str = "TableStyleMedium9",
 ) -> str:
     """Creates a native Excel table from a specified range of data."""
     try:
@@ -375,6 +380,7 @@ def create_table(
     except Exception as e:
         logger.error(f"Error creating table: {e}")
         raise
+
 
 @mcp.tool()
 def copy_worksheet(
@@ -468,6 +474,7 @@ def unmerge_cells(filepath: str, sheet_name: str, start_cell: str, end_cell: str
         logger.error(f"Error unmerging cells: {e}")
         raise
 
+
 @mcp.tool()
 def copy_range(
     filepath: str,
@@ -475,7 +482,7 @@ def copy_range(
     source_start: str,
     source_end: str,
     target_start: str,
-    target_sheet: str = None
+    target_sheet: str | None = None,
 ) -> str:
     """Copy a range of cells to another location."""
     try:
@@ -495,6 +502,7 @@ def copy_range(
     except Exception as e:
         logger.error(f"Error copying range: {e}")
         raise
+
 
 @mcp.tool()
 def delete_range(
@@ -522,12 +530,10 @@ def delete_range(
         logger.error(f"Error deleting range: {e}")
         raise
 
+
 @mcp.tool()
 def validate_excel_range(
-    filepath: str,
-    sheet_name: str,
-    start_cell: str,
-    end_cell: str = None
+    filepath: str, sheet_name: str, start_cell: str, end_cell: str | None = None
 ) -> str:
     """Validate if a range exists and is properly formatted."""
     try:
@@ -540,6 +546,7 @@ def validate_excel_range(
     except Exception as e:
         logger.error(f"Error validating range: {e}")
         raise
+
 
 @mcp.tool()
 def get_data_validation_info(
